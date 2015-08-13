@@ -1,0 +1,53 @@
+//
+//  SKNode+PlaySound.m
+//  EasyLSP
+//
+//  Created by Quan on 15/6/16.
+//  Copyright © 2015年 LittleIsland. All rights reserved.
+//
+
+#import "SKNode+PlaySound.h"
+#import "GlobalUtil.h"
+
+@implementation SKNode (PlaySound)
+
+- (void)playSound:(NSString *)soundName completion:(void (^)())completion {
+    if ([self actionForKey:@"PlaySound"]) {
+        [self removeActionForKey:@"PlaySound"];
+    }
+    if (!soundName || ![GlobalUtil soundFileExist:soundName]) {
+        return;
+    }
+    
+    SKAction *playSoundAction = [SKAction playSoundFileNamed:soundName waitForCompletion:YES];
+    SKAction *doneAction = [SKAction runBlock:^{
+        if (completion) {
+            completion();
+        }
+    }];
+    [self runAction:[SKAction sequence:@[playSoundAction, doneAction]] withKey:@"PlaySound"];
+}
+
+- (void)playCorrectMaleSound {
+    NSInteger index = arc4random() % 5;
+    NSString *soundName = [NSString stringWithFormat:@"correct_male%@.mp3", @(index)];
+    
+    [self runAction:[SKAction playSoundFileNamed:soundName waitForCompletion:YES]];
+}
+
+- (void)playCorrectFemaleSound {
+    NSInteger index = arc4random() % 11;
+    NSString *soundName = [NSString stringWithFormat:@"correct_female%@.mp3", @(index)];
+    
+    [self runAction:[SKAction playSoundFileNamed:soundName waitForCompletion:YES]];
+}
+
+- (void)playWrongSound {
+    [self runAction:[SKAction playSoundFileNamed:@"wrong_common.mp3" waitForCompletion:YES]];
+}
+
+- (void)playGameOverSound {
+    [self runAction:[SKAction playSoundFileNamed:@"gameover.wav" waitForCompletion:YES]];
+}
+
+@end

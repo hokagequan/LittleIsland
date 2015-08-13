@@ -1,0 +1,37 @@
+//
+//  SKNode+PlaySound.m
+//  EasyLSP
+//
+//  Created by Quan on 15/6/16.
+//  Copyright © 2015年 LittleIsland. All rights reserved.
+//
+
+#import "SKNode+PlaySound.h"
+#import "GlobalUtil.h"
+
+@implementation SKNode (PlaySound)
+
+- (void)playSound:(NSString *)soundName {
+    if ([self actionForKey:@"PlaySound"]) {
+        [self removeActionForKey:@"PlaySound"];
+    }
+    if (!soundName || ![GlobalUtil soundFileExist:soundName]) {
+        return;
+    }
+    
+    [self runAction:[SKAction playSoundFileNamed:soundName waitForCompletion:YES] withKey:@"PlaySound"];
+}
+
+- (void)playCorrectSound {
+    [GlobalUtil speakEnglishText:@"correct"];
+}
+
+- (void)playWrongSound {
+    [GlobalUtil speakEnglishText:@"wrong"];
+}
+
+- (void)playGameOverSound {
+    [GlobalUtil speakEnglishText:@"game over"];
+}
+
+@end
